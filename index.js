@@ -16,6 +16,23 @@ const TEMPLATE = `
     <span style="${TEXT_STYLE}" class="js-timer-minutes">00</span>:<span style="${TEXT_STYLE}" class="js-timer-seconds">00</span>
   </h1>`
 
+const MOTIVATION_QUOTES = [
+  "Never put off for tomorrow, what you can do today",
+  "A year from now you may wish you had started today",
+  "Don’t wait. The time will never be just right",
+  "It is easier to resist at the beginning than at the end",
+  "The best way to get something done is to begin",
+  "Pretty please with sugar on top, get back to work",
+]
+
+function getRandomInt(maxInt) {
+  return Math.floor(Math.random() * maxInt);
+}
+
+function getRandomQuote() {
+  const randomIndex = getRandomInt(MOTIVATION_QUOTES.length - 1)
+  return MOTIVATION_QUOTES[randomIndex]
+}
 
 function padZero(number) {
   return ("00" + String(number)).slice(-2);
@@ -123,7 +140,7 @@ function main() {
   document.addEventListener("visibilitychange", handleVisibilityChange, false);
   handleVisibilityChange()
 
-  alertUser = () => alert("Pretty please with sugar on top, get back to work")
+  alertUser = () => alert(getRandomQuote())
   alertInterval = 30000
 
   const oneSecond = 1000
