@@ -107,6 +107,18 @@ function main() {
   // https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
   document.addEventListener("visibilitychange", handleVisibilityChange, false);
   handleVisibilityChange()
+
+  alertUser = () => alert("Pretty please with sugar on top, get back to work")
+  alertInterval = 30000
+
+  const oneSecond = 1000
+  var timerEndIntervalId = setInterval(function handelTimerEnd() {
+    if (timer.calculateSecsLeft() == 0) {
+      clearInterval(timerEndIntervalId)
+      alertUser()
+      setInterval(alertUser, alertInterval)
+    }
+  }, oneSecond)
 }
 
 if (document.readyState === "complete" || document.readyState === "loaded") {
