@@ -1,5 +1,21 @@
-var TIMEOUT_IN_SECS = 3 * 60
-var TEMPLATE = '<h1><span class="js-timer-minutes">00</span>:<span class="js-timer-seconds">00</span></h1>'
+const TIMEOUT_IN_SECS = 3 * 60
+
+const TEXT_STYLE = 'margin: 0; border: 0; padding: 0; font-size: 40px; text-align: center; line-height: 100%;'
+
+const MAX_DEPTH_VALUE = 2147483647;
+const MAIN_STYLE = `position: sticky; 
+  width: 150px; 
+  height: max-content; 
+  top: 0; 
+  z-index: ${MAX_DEPTH_VALUE}; 
+  background-color: whitesmoke; 
+  padding: 20px 10px;`
+
+const TEMPLATE = `
+  <h1 style="${TEXT_STYLE}">
+    <span style="${TEXT_STYLE}" class="js-timer-minutes">00</span>:<span style="${TEXT_STYLE}" class="js-timer-seconds">00</span>
+  </h1>`
+
 
 function padZero(number) {
   return ("00" + String(number)).slice(-2);
@@ -55,9 +71,8 @@ class TimerWidget {
 
     // adds HTML tag to current page
     this.timerContainer = document.createElement('div')
-
-    this.timerContainer.setAttribute("style", "height: 100px;")
     this.timerContainer.innerHTML = TEMPLATE
+    this.timerContainer.style.cssText = MAIN_STYLE
 
     rootTag.insertBefore(this.timerContainer, rootTag.firstChild)
 
@@ -86,7 +101,7 @@ function main() {
   var timerWiget = new TimerWidget()
   var intervalId = null
 
-  timerWiget.mount(document.body)
+  timerWiget.mount(document.getElementsByClassName("layout")[0])
 
   function handleIntervalTick() {
     var secsLeft = timer.calculateSecsLeft()
@@ -121,9 +136,8 @@ function main() {
   }, oneSecond)
 }
 
-if (document.readyState === "complete" || document.readyState === "loaded") {
-  main();
-} else {
-  // initialize timer when page ready for presentation
-  window.addEventListener('DOMContentLoaded', main);
+document.onreadystatechange = () => {
+  if (document.readyState === "complete" || document.readyState === "loaded") {
+    main();
+  }
 }
