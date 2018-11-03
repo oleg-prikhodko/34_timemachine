@@ -6,7 +6,7 @@ Ever wonder how much time you spend on [habr.com](https://habr.com/)? Don't worr
 
 Install CJS extension for Chrome: [Custom JavaScript for websites](https://chrome.google.com/webstore/detail/custom-javascript-for-web/poakhlngfciodnhlhhgnaaelnpjljija).
 
-Open configuration of [cjs](https://chrome.google.com/webstore/detail/custom-javascript-for-web/poakhlngfciodnhlhhgnaaelnpjljija) browser extension on the site you want to control. Click on the link "your own external scripts", add [this url](https://cdn.jsdelivr.net/gh/oleg-prikhodko/34_timemachine@v0.2/index.js). Don`t forget to press "enable cjs for this host" to enable custom JS.
+Open configuration of [cjs](https://chrome.google.com/webstore/detail/custom-javascript-for-web/poakhlngfciodnhlhhgnaaelnpjljija) browser extension on the site you want to control. Click on the link "your own external scripts", add [this url](https://cdn.jsdelivr.net/gh/oleg-prikhodko/34_timemachine@v0.3/index.js). Don`t forget to press "enable cjs for this host" to enable custom JS.
 
 Extension will inject 3 minute timer to the top-left corner of your browser window. After timer runs out - alerts containing motivational messages will popup every 30 seconds.
 
