@@ -1,4 +1,4 @@
-const TIMEOUT_IN_SECS = 3 * 60
+const TIMEOUT_IN_SECS = 1 * 60
 
 const TEXT_STYLE = 'margin: 0; border: 0; padding: 0; font-size: 40px; text-align: center; line-height: 100%;'
 
@@ -45,14 +45,14 @@ class Timer {
     this.initial_timeout_in_secs = timeout_in_secs
     this.reset()
   }
-  getTimestampInSecs() {
+  getTimestamp() {
     var timestampInMilliseconds = new Date().getTime()
     return Math.round(timestampInMilliseconds / 1000)
   }
   start() {
     if (this.isRunning)
       return
-    this.timestampOnStart = this.getTimestampInSecs()
+    this.timestampOnStart = this.getTimestamp()
     this.isRunning = true
   }
   stop() {
@@ -70,9 +70,15 @@ class Timer {
   calculateSecsLeft() {
     if (!this.isRunning)
       return this.timeout_in_secs
-    var currentTimestamp = this.getTimestampInSecs()
+    var currentTimestamp = this.getTimestamp()
     var secsGone = currentTimestamp - this.timestampOnStart
     return Math.max(this.timeout_in_secs - secsGone, 0)
+  }
+}
+
+class AlertTimer extends Timer {
+  getTimestamp() {
+    return new Date().getTime()
   }
 }
 
@@ -120,37 +126,40 @@ function main() {
 
   timerWiget.mount(document.getElementsByClassName("layout")[0])
 
+  alertUser = () => alert(getRandomQuote())
+  var alertTimer = new AlertTimer(30000)
+  var threeMinutesHasPassed = false
+
   function handleIntervalTick() {
     var secsLeft = timer.calculateSecsLeft()
     timerWiget.update(secsLeft)
+
+    if (secsLeft == 0 && threeMinutesHasPassed == false) {
+      threeMinutesHasPassed = true
+      alertTimer.start()
+    } else if (alertTimer.calculateSecsLeft() == 0 && threeMinutesHasPassed == true) {
+      alertUser()
+      alertTimer.reset()
+      alertTimer.start()
+    }
   }
 
   function handleVisibilityChange() {
     if (document.hidden) {
       timer.stop()
+      alertTimer.stop()
       clearInterval(intervalId)
       intervalId = null
     } else {
       timer.start()
-      intervalId = intervalId || setInterval(handleIntervalTick, 300)
+      alertTimer.start()
+      intervalId = intervalId || setInterval(handleIntervalTick, 1001)
     }
   }
 
   // https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
   document.addEventListener("visibilitychange", handleVisibilityChange, false);
   handleVisibilityChange()
-
-  alertUser = () => alert(getRandomQuote())
-  alertInterval = 30000
-
-  const oneSecond = 1000
-  var timerEndIntervalId = setInterval(function handelTimerEnd() {
-    if (timer.calculateSecsLeft() == 0) {
-      clearInterval(timerEndIntervalId)
-      alertUser()
-      setInterval(alertUser, alertInterval)
-    }
-  }, oneSecond)
 }
 
 document.onreadystatechange = () => {
