@@ -133,6 +133,7 @@ function main() {
 
     if (secsLeft == 0 && threeMinutesHasPassed == false) {
       threeMinutesHasPassed = true
+      alertUser()
       alertTimer.start()
     } else if (alertTimer.calculateSecsLeft() == 0 && threeMinutesHasPassed == true) {
       alertUser()
@@ -149,8 +150,9 @@ function main() {
       intervalId = null
     } else {
       timer.start()
-      alertTimer.start()
-      intervalId = intervalId || setInterval(handleIntervalTick, 1001)
+      if (threeMinutesHasPassed)
+        alertTimer.start()
+      intervalId = intervalId || setInterval(handleIntervalTick, 300)
     }
   }
 
