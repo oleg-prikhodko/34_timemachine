@@ -1,4 +1,4 @@
-const TIMEOUT_IN_SECS = 1 * 60
+const TIMEOUT_IN_SECS = 3 * 60
 
 const TEXT_STYLE = 'margin: 0; border: 0; padding: 0; font-size: 40px; text-align: center; line-height: 100%;'
 
@@ -41,13 +41,15 @@ function padZero(number) {
 class Timer {
   // IE does not support new style classes yet
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
-  constructor(timeout_in_secs) {
-    this.initial_timeout_in_secs = timeout_in_secs
+  constructor(timeout) {
+    this.initialTimeout = timeout
     this.reset()
   }
   getTimestamp() {
-    var timestampInMilliseconds = new Date().getTime()
-    return Math.round(timestampInMilliseconds / 1000)
+    const timestampInMilliseconds = new Date().getTime()
+    const oneMillsecondsInSecond = 1000
+    const timeoutInSecs = Math.round(timestampInMilliseconds / oneMillsecondsInSecond)
+    return timeoutInSecs
   }
   start() {
     if (this.isRunning)
@@ -58,27 +60,21 @@ class Timer {
   stop() {
     if (!this.isRunning)
       return
-    this.timeout_in_secs = this.calculateSecsLeft()
+    this.timeout = this.calculateSecsLeft()
     this.timestampOnStart = null
     this.isRunning = false
   }
-  reset(timeout_in_secs) {
+  reset() {
     this.isRunning = false
     this.timestampOnStart = null
-    this.timeout_in_secs = this.initial_timeout_in_secs
+    this.timeout = this.initialTimeout
   }
   calculateSecsLeft() {
     if (!this.isRunning)
-      return this.timeout_in_secs
+      return this.timeout
     var currentTimestamp = this.getTimestamp()
-    var secsGone = currentTimestamp - this.timestampOnStart
-    return Math.max(this.timeout_in_secs - secsGone, 0)
-  }
-}
-
-class AlertTimer extends Timer {
-  getTimestamp() {
-    return new Date().getTime()
+    var timePassed = currentTimestamp - this.timestampOnStart
+    return Math.max(this.timeout - timePassed, 0)
   }
 }
 
@@ -127,7 +123,8 @@ function main() {
   timerWiget.mount(document.getElementsByClassName("layout")[0])
 
   alertUser = () => alert(getRandomQuote())
-  var alertTimer = new AlertTimer(30000)
+  const alertIntervalSecs = 30
+  var alertTimer = new Timer(alertIntervalSecs)
   var threeMinutesHasPassed = false
 
   function handleIntervalTick() {
